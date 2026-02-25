@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sound Library — SL-1 Minimal</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='black'>&#x262E;</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style-minimal.css">
+</head>
+<body>
+
+  <div class="device">
+
+    <!-- Top panel: speaker + screen | encoders -->
+    <div class="panel-top">
+
+      <div class="panel-left">
+        <div class="panel-left-top">
+          <div class="speaker"></div>
+          <div class="screen-bezel">
+            <div class="screen" id="screen">
+              <div class="screen-content">
+
+                <div class="screen-left">
+                  <div class="screen-header">
+                    <span>SND LIB 1.0</span>
+                    <span id="screen-status">READY</span>
+                  </div>
+                  <div class="screen-main">
+                    <span class="screen-caret">►</span>
+                    <span id="screen-name">——————</span>
+                    <span class="screen-cursor">█</span>
+                  </div>
+                  <div class="screen-footer">
+                    <span id="screen-wave">▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁</span>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-right">
+        <div class="encoders">
+
+          <div class="encoder-unit" data-param="volume">
+            <div class="encoder-knob" data-param="volume">
+              <div class="encoder-dot-arm"><div class="encoder-dot"></div></div>
+            </div>
+            <span class="encoder-label">VOL</span>
+          </div>
+
+          <div class="encoder-unit" data-param="reverb">
+            <div class="encoder-knob" data-param="reverb">
+              <div class="encoder-dot-arm"><div class="encoder-dot"></div></div>
+            </div>
+            <span class="encoder-label">REVERB</span>
+          </div>
+
+          <div class="encoder-unit" data-param="delay">
+            <div class="encoder-knob" data-param="delay">
+              <div class="encoder-dot-arm"><div class="encoder-dot"></div></div>
+            </div>
+            <span class="encoder-label">DELAY</span>
+          </div>
+
+          <div class="encoder-unit" data-param="seq">
+            <div class="encoder-knob" data-param="seq">
+              <div class="encoder-dot-arm"><div class="encoder-dot"></div></div>
+            </div>
+            <span class="encoder-label">SEQUENCE</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Keys panel -->
+    <div class="panel-keys">
+      <div class="pips-row"  id="pips-row"></div>
+      <div class="keys-row"  id="keys-row"></div>
+      <div class="labels-row" id="labels-row"></div>
+    </div>
+
+    <!-- Mood selector -->
+    <div class="mood-panel">
+      <div class="mood-left">
+        <span class="mood-hint">choose a different mood</span>
+        <div class="mood-row">
+          <button class="mood-btn active" data-mood="default">Default</button>
+          <button class="mood-btn" data-mood="vibes">Vibes Only</button>
+          <button class="mood-btn" data-mood="sunny">Sunny Afternoon</button>
+          <button class="mood-btn" data-mood="chill">Chill Wave</button>
+          <button class="mood-btn" data-mood="kitten">Kitten</button>
+        </div>
+      </div>
+      <div class="brand-row">
+        <div class="led" id="led"></div>
+        <span class="brand">SL · 1</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app-minimal.js"></script>
+</body>
+</html>

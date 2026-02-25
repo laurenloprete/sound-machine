@@ -1,0 +1,686 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #eeeeee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Device ───────────────────────────────────────────────────────────────── */
+
+.device {
+  width: 620px;
+  flex-shrink: 0;
+  position: relative;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px 20px 20px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.06),
+    /* Physical bottom edge steps */
+    0 2px 0 #e2e2e2,
+    0 4px 0 #d0d0d0,
+    /* Elevation */
+    0 8px 28px rgba(0, 0, 0, 0.10),
+    0 28px 72px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+/* Top-surface sheen */
+.device::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: linear-gradient(
+    148deg,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(255, 255, 255, 0.15) 32%,
+    transparent 58%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Right-side grip strip */
+.device::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 16px;
+  bottom: 16px;
+  width: 5px;
+  background: linear-gradient(to right, rgba(0,0,0,0.015), rgba(0,0,0,0.04));
+  border-radius: 0 16px 16px 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure children sit above pseudo-elements */
+.panel-top, .panel-keys {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Top panel ────────────────────────────────────────────────────────────── */
+
+.panel-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 14px;
+}
+
+.panel-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.panel-left-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Speaker grille ───────────────────────────────────────────────────────── */
+
+.speaker {
+  width: 36px;
+  height: 64px;
+  border-radius: 7px;
+  background-color: #ebebeb;
+  background-image: radial-gradient(circle, #c4c4c4 1.2px, transparent 1.2px);
+  background-size: 5.2px 5.2px;
+  background-position: 2px 2px;
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.08),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.05),
+    0 1px 0 rgba(255, 255, 255, 0.9);
+  flex-shrink: 0;
+}
+
+/* ── Screen — kept dark as signature element ──────────────────────────────── */
+
+.screen-bezel {
+  flex: 1;
+  min-width: 0;
+  background: #111111;
+  border-radius: 6px;
+  padding: 4px;
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(0, 0, 0, 0.18),
+    0 1px 0 rgba(255, 255, 255, 0.6),
+    0 -1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.screen {
+  position: relative;
+  height: 66px;
+  background: #030603;
+  border-radius: 4px;
+  padding: 7px 11px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: opacity 0.055s;
+}
+
+/* Scanlines */
+.screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.11) 0px,
+    rgba(0, 0, 0, 0.11) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Glass glare */
+.screen::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 44%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 100%);
+  border-radius: 4px 4px 0 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.screen.flash { opacity: 0.12; }
+
+.screen-content {
+  position: relative;
+  z-index: 1;
+  font-family: 'VT323', monospace;
+  color: #00D533;
+  text-shadow: 0 0 7px rgba(0, 213, 51, 0.6);
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  align-items: stretch;
+  height: 100%;
+}
+
+.screen-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+}
+
+.screen-divider {
+  width: 1px;
+  background: rgba(0, 213, 51, 0.14);
+  margin: 0 11px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.screen-right {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  overflow: hidden;
+}
+
+.screen-meta-label {
+  font-size: 9px;
+  opacity: 0.28;
+  letter-spacing: 1.5px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.screen-meta-code-label {
+  margin-top: 7px;
+}
+
+#screen-token {
+  font-size: 18px;
+  line-height: 1;
+  opacity: 0.82;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#screen-code {
+  font-size: 13px;
+  line-height: 1;
+  opacity: 0.55;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.screen-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  opacity: 0.48;
+  line-height: 1;
+}
+
+.screen-main {
+  font-size: 26px;
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  letter-spacing: 1px;
+}
+
+.screen-caret { opacity: 0.38; }
+
+.screen-cursor {
+  font-size: 20px;
+  animation: blink 1.1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.82; }
+  50%       { opacity: 0; }
+}
+
+.screen-footer {
+  font-size: 13px;
+  opacity: 0.32;
+  line-height: 1;
+  letter-spacing: 0.5px;
+}
+
+/* ── Platform row ─────────────────────────────────────────────────────────── */
+
+.platform-row {
+  display: flex;
+  gap: 4px;
+  padding-left: 44px;
+}
+
+.platform-btn {
+  background: none;
+  border: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  padding: 3px 7px;
+  border-radius: 3px;
+  transition: color 0.1s, background 0.1s;
+  -webkit-font-smoothing: antialiased;
+}
+
+.platform-btn.active {
+  color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.platform-btn:hover:not(.active) {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+/* ── Panel right ──────────────────────────────────────────────────────────── */
+
+.panel-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.encoders {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+/* ── Encoder knobs ────────────────────────────────────────────────────────── */
+
+.encoder-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  user-select: none;
+}
+
+.encoder-knob {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  cursor: ns-resize;
+}
+
+.encoder-dot-arm {
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
+  pointer-events: none;
+}
+
+.encoder-dot {
+  position: absolute;
+  width: 4px;
+  height: 8px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.22);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.encoder-label {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.25);
+  user-select: none;
+}
+
+.encoder-unit.seq-on .encoder-label {
+  color: rgba(0, 213, 51, 0.75);
+}
+
+/* ── Sequence toggle — vertical slider switch ─────────────────────────────── */
+
+/* Track: grey recessed housing, same footprint as the circular dials */
+.encoder-knob[data-param="seq"] {
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+/* Sliding button — flat white cap that moves up/down in the track */
+.encoder-knob[data-param="seq"] .encoder-dot-arm {
+  position: absolute;
+  inset: auto;
+  left: 4px;
+  right: 4px;
+  top: 4px;
+  height: 24px;
+  border-radius: 9px;
+  background: #ffffff;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.09),
+    0 2px 0 rgba(0, 0, 0, 0.05),
+    inset 0 1px 2px rgba(255, 255, 255, 1);
+  transition: top 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: auto;
+}
+
+/* Button slides to bottom when on */
+.encoder-unit.seq-on .encoder-knob[data-param="seq"] .encoder-dot-arm {
+  top: calc(100% - 28px); /* 54px track − 24px button − 4px bottom margin */
+}
+
+/* Indicator light — small dot on button face */
+.encoder-knob[data-param="seq"] .encoder-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle at 38% 32%, #e0e0e0, #c8c8c8);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.14), 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Indicator glows green when active */
+.encoder-unit.seq-on .encoder-knob[data-param="seq"] .encoder-dot {
+  background: radial-gradient(circle at 35% 30%, #44ee66, #00D533);
+  box-shadow:
+    0 0 5px rgba(0, 213, 51, 0.90),
+    0 0 12px rgba(0, 213, 51, 0.45);
+}
+
+/* ── Brand + LED ──────────────────────────────────────────────────────────── */
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, #e8e8e8, #c8c8c8);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: background 0.14s, box-shadow 0.14s;
+}
+
+.led.on {
+  background: radial-gradient(circle at 35% 30%, #44ee66, #00D533);
+  box-shadow:
+    0 0 6px rgba(0, 213, 51, 0.9),
+    0 0 18px rgba(0, 213, 51, 0.45),
+    inset 0 1px 0 rgba(200, 255, 210, 0.5);
+}
+
+.brand {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.18);
+  user-select: none;
+}
+
+/* ── Keys panel ───────────────────────────────────────────────────────────── */
+
+.panel-keys {
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 10px;
+  padding: 12px 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.05),
+    0 1px 0 rgba(255, 255, 255, 0.98);
+}
+
+/* ── Pip circles ──────────────────────────────────────────────────────────── */
+
+.pips-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.pip {
+  flex: 0 0 62px;
+  display: flex;
+  justify-content: center;
+}
+
+.pip-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 34%, #d8d8d8, #bdbdbd);
+  box-shadow:
+    /* Soft drop shadow — separation without outline ring */
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    /* Concave inset — the button is recessed into the panel */
+    inset 0 1px 4px rgba(0, 0, 0, 0.22),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.06);
+  transition: background 0.08s, box-shadow 0.08s;
+}
+
+.pip-dot.active {
+  background: radial-gradient(circle at 40% 34%, #33ee66, #00D533);
+  box-shadow:
+    0 0 8px rgba(0, 213, 51, 0.85),
+    0 0 20px rgba(0, 213, 51, 0.4),
+    inset 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* ── Keys ─────────────────────────────────────────────────────────────────── */
+
+.keys-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.key {
+  flex: 0 0 62px;
+  height: 118px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  outline: none;
+  position: relative;
+  transition: transform 0.07s ease, box-shadow 0.07s ease;
+
+  background: #ffffff;
+
+  box-shadow:
+    /* Close contact shadow — immediate separation from panel, no hard outline */
+    0 1px 2px rgba(0, 0, 0, 0.10),
+    /* Ambient elevation — the key floating above the key bed */
+    0 5px 18px rgba(0, 0, 0, 0.07),
+    /* One soft physical bottom face — single step, not a staircase */
+    0 5px 0 rgba(0, 0, 0, 0.08),
+    /* Top-edge overhead highlight */
+    inset 0 2px 4px rgba(255, 255, 255, 1),
+    /* Lower body fades gently toward shadow side */
+    inset 0 -12px 20px rgba(0, 0, 0, 0.025);
+}
+
+.key:hover {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.10),
+    0 6px 22px rgba(0, 0, 0, 0.08),
+    0 5px 0 rgba(0, 0, 0, 0.08),
+    inset 0 2px 4px rgba(255, 255, 255, 1),
+    inset 0 -12px 20px rgba(0, 0, 0, 0.025);
+}
+
+.key:active,
+.key.pressed {
+  transform: translateY(4px);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.07),
+    0 1px 0 rgba(0, 0, 0, 0.06),
+    /* Deep inset — key pushed into its housing */
+    inset 0 2px 6px rgba(0, 0, 0, 0.08),
+    inset 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.key:focus-visible {
+  outline: 2px solid rgba(0, 0, 0, 0.12);
+  outline-offset: 2px;
+}
+
+/* ── Mood selector ────────────────────────────────────────────────────────── */
+
+.mood-panel {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+
+.mood-left {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.mood-hint {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.18);
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mood-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.mood-btn {
+  flex-shrink: 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.3);
+  padding: 5px 11px 4px;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, color 0.1s;
+
+  background: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    0 3px 8px rgba(0, 0, 0, 0.05),
+    0 3px 0 rgba(0, 0, 0, 0.06),
+    inset 0 1px 2px rgba(255, 255, 255, 1);
+}
+
+.mood-btn:hover {
+  color: rgba(0, 0, 0, 0.48);
+}
+
+.mood-btn:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 1px 0 rgba(0, 0, 0, 0.04),
+    inset 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.mood-btn.active {
+  color: rgba(0, 0, 0, 0.58);
+  transform: translateY(2px);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 1px 0 rgba(0, 0, 0, 0.04),
+    inset 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.mood-btn:focus-visible {
+  outline: 2px solid rgba(0, 0, 0, 0.1);
+  outline-offset: 2px;
+}
+
+/* ── Key labels ───────────────────────────────────────────────────────────── */
+
+.labels-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.key-label {
+  flex: 0 0 62px;
+  text-align: center;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.35);
+  user-select: none;
+}
+
+/* ── Mobile — rotate device to landscape within portrait viewport ─────────── */
+
+@media (max-width: 499px) {
+  html, body {
+    overflow: hidden;
+    width: 100%;
+    height: 100svh;
+    min-height: unset;
+    padding: 0;
+    margin: 0;
+  }
+}

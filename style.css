@@ -1,0 +1,663 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Device ───────────────────────────────────────────────────────────────── */
+
+.device {
+  width: 620px;
+  flex-shrink: 0;
+  position: relative;
+  background: linear-gradient(165deg, #dedad3 0%, #d4cfc9 55%, #cec9c3 100%);
+  border-radius: 16px;
+  padding: 18px 20px 20px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.22),
+    0 1px 0 rgba(255, 255, 255, 0.5),
+    0 -1px 0 rgba(0, 0, 0, 0.14),
+    /* Physical thickness — two hard edge steps at bottom */
+    0 3px 0 rgba(196, 191, 184, 1),
+    0 5px 0 rgba(175, 170, 163, 1),
+    /* Elevation shadows */
+    0 8px 28px rgba(0, 0, 0, 0.55),
+    0 28px 72px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.58);
+}
+
+/* Top-surface sheen — the OP-1 body has a faint angled light catch */
+.device::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: linear-gradient(
+    148deg,
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(255, 255, 255, 0.04) 28%,
+    transparent 55%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Right-side rubber/grip strip — authentic OP-1 detail */
+.device::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 16px;
+  bottom: 16px;
+  width: 5px;
+  background: linear-gradient(to right, rgba(0,0,0,0.06), rgba(0,0,0,0.13));
+  border-radius: 0 16px 16px 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure children sit above pseudo-elements */
+.panel-top, .panel-keys {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Top panel ────────────────────────────────────────────────────────────── */
+
+.panel-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 14px;
+}
+
+.panel-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.panel-left-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Speaker grille ───────────────────────────────────────────────────────── */
+
+.speaker {
+  width: 36px;
+  height: 64px;
+  border-radius: 7px;
+  /* Tighter, denser dot grid — matches OP-1's precise punch-hole pattern */
+  background-color: #b8b3ac;
+  background-image: radial-gradient(circle, #8e8a84 1.2px, transparent 1.2px);
+  background-size: 5.2px 5.2px;
+  background-position: 2px 2px;
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.22),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.14),
+    0 1px 0 rgba(255, 255, 255, 0.18),
+    0 0 0 1px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+/* ── Screen ───────────────────────────────────────────────────────────────── */
+
+.screen-bezel {
+  flex: 1;
+  min-width: 0;
+  background: #111111;
+  border-radius: 6px;
+  padding: 4px;
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(0, 0, 0, 0.22),
+    0 1px 0 rgba(255, 255, 255, 0.07),
+    0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.screen {
+  position: relative;
+  height: 66px;
+  background: #030603;
+  border-radius: 4px;
+  padding: 7px 11px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: opacity 0.055s;
+}
+
+/* Scanlines */
+.screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.11) 0px,
+    rgba(0, 0, 0, 0.11) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Glass glare */
+.screen::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 44%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 100%);
+  border-radius: 4px 4px 0 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.screen.flash { opacity: 0.12; }
+
+.screen-content {
+  position: relative;
+  z-index: 1;
+  font-family: 'VT323', monospace;
+  color: #00ff41;
+  text-shadow: 0 0 7px rgba(0, 255, 65, 0.6);
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  align-items: stretch;
+  height: 100%;
+}
+
+.screen-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  width: 148px;
+  flex-shrink: 0;
+}
+
+.screen-divider {
+  width: 1px;
+  background: rgba(0, 255, 65, 0.14);
+  margin: 0 11px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.screen-right {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  overflow: hidden;
+}
+
+.screen-meta-label {
+  font-size: 9px;
+  opacity: 0.28;
+  letter-spacing: 1.5px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.screen-meta-code-label {
+  margin-top: 7px;
+}
+
+#screen-token {
+  font-size: 18px;
+  line-height: 1;
+  opacity: 0.82;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#screen-code {
+  font-size: 13px;
+  line-height: 1;
+  opacity: 0.55;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.screen-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  opacity: 0.48;
+  line-height: 1;
+}
+
+.screen-main {
+  font-size: 26px;
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  letter-spacing: 1px;
+}
+
+.screen-caret { opacity: 0.38; }
+
+.screen-cursor {
+  font-size: 20px;
+  animation: blink 1.1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.82; }
+  50%       { opacity: 0; }
+}
+
+.screen-footer {
+  font-size: 13px;
+  opacity: 0.32;
+  line-height: 1;
+  letter-spacing: 0.5px;
+}
+
+/* ── Platform row ─────────────────────────────────────────────────────────── */
+
+.platform-row {
+  display: flex;
+  gap: 4px;
+  padding-left: 44px; /* aligns with screen edge (speaker 36px + gap 8px) */
+}
+
+.platform-btn {
+  background: none;
+  border: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(50, 45, 40, 0.28);
+  cursor: pointer;
+  padding: 3px 7px;
+  border-radius: 3px;
+  transition: color 0.1s, background 0.1s;
+  -webkit-font-smoothing: antialiased;
+}
+
+.platform-btn.active {
+  color: rgba(50, 45, 40, 0.65);
+  background: rgba(0, 0, 0, 0.07);
+}
+
+.platform-btn:hover:not(.active) {
+  color: rgba(50, 45, 40, 0.45);
+}
+
+/* ── Panel right ──────────────────────────────────────────────────────────── */
+
+.panel-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 74px; /* matches screen-bezel */
+  flex-shrink: 0;
+}
+
+.encoders {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+/* ── Encoder knobs ────────────────────────────────────────────────────────── */
+
+.encoder-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  user-select: none;
+}
+
+.encoder-knob {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  cursor: ns-resize;
+  /* colors applied via JS */
+}
+
+.encoder-dot-arm {
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
+  /* initial angle set via JS */
+  pointer-events: none;
+}
+
+.encoder-dot {
+  position: absolute;
+  width: 4px;
+  height: 8px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.4);
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.encoder-label {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(50, 45, 40, 0.38);
+  user-select: none;
+}
+
+/* Loop encoder — active state */
+.encoder-unit.loop-on .encoder-label {
+  color: rgba(50, 45, 40, 0.7);
+}
+
+/* ── Brand + LED ──────────────────────────────────────────────────────────── */
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, #c8c3bb, #9a958d);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: background 0.14s, box-shadow 0.14s;
+}
+
+.led.on {
+  background: radial-gradient(circle at 35% 30%, #f06030, #c44010);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.15),
+    0 0 6px #d4521a,
+    0 0 18px rgba(212, 82, 26, 0.5),
+    inset 0 1px 0 rgba(255, 200, 150, 0.4);
+}
+
+.brand {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: rgba(50, 45, 40, 0.28);
+  user-select: none;
+}
+
+/* ── Keys panel ───────────────────────────────────────────────────────────── */
+
+.panel-keys {
+  background: rgba(0, 0, 0, 0.09);
+  border-radius: 10px;
+  padding: 12px 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  /* Panel groove — the OP-1's key bed is a distinct recessed panel */
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 rgba(0, 0, 0, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.22);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* ── Pip circles ──────────────────────────────────────────────────────────── */
+
+.pips-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.pip {
+  flex: 0 0 62px;
+  display: flex;
+  justify-content: center;
+}
+
+.pip-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  /* Slight gradient to suggest the concave button cap */
+  background: radial-gradient(circle at 40% 34%, #282828, #0e0e10);
+  box-shadow:
+    /* Outer groove ring — shows the button is seated in a recess */
+    0 0 0 2px rgba(0, 0, 0, 0.28),
+    0 0 0 3.5px rgba(210, 205, 198, 0.5),
+    /* Deep inset shadow — button cap sits below surface */
+    inset 0 1px 4px rgba(0, 0, 0, 0.7),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.04);
+  transition: background 0.08s, box-shadow 0.08s;
+}
+
+.pip-dot.active {
+  background: radial-gradient(circle at 40% 34%, #e8622a, #c44215);
+  box-shadow:
+    0 0 0 2px rgba(0, 0, 0, 0.2),
+    0 0 0 3.5px rgba(210, 205, 198, 0.4),
+    0 0 8px #d4521a,
+    0 0 20px rgba(212, 82, 26, 0.5),
+    inset 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Keys ─────────────────────────────────────────────────────────────────── */
+
+.keys-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.key {
+  flex: 0 0 62px;
+  height: 118px;
+  border: none;
+  border-radius: 999px; /* full pill */
+  cursor: pointer;
+  outline: none;
+  position: relative;
+  transition: transform 0.07s ease, box-shadow 0.07s ease;
+
+  background: linear-gradient(
+    to bottom,
+    #eae5df 0%,
+    #dedad4 38%,
+    #d2cdc7 100%
+  );
+
+  box-shadow:
+    /* Outer ring — the key edge where it meets the panel gap */
+    0 0 0 1px rgba(0, 0, 0, 0.1),
+    /* Hard bottom face — the literal side wall of the key (most important) */
+    0 5px 0 rgba(182, 176, 169, 1),
+    0 6px 0 rgba(162, 156, 149, 1),
+    /* Diffuse drop shadow */
+    0 8px 16px rgba(0, 0, 0, 0.14),
+    /* Top face highlight */
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    /* Side edge catch */
+    inset 1px 0 0 rgba(255, 255, 255, 0.22),
+    inset -1px 0 0 rgba(0, 0, 0, 0.04);
+}
+
+.key:hover {
+  background: linear-gradient(
+    to bottom,
+    #f0ebe5 0%,
+    #e4e0da 38%,
+    #d8d3cd 100%
+  );
+}
+
+.key:active,
+.key.pressed {
+  transform: translateY(4px);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.1),
+    /* Reduced bottom face when depressed */
+    0 1px 0 rgba(182, 176, 169, 1),
+    0 2px 0 rgba(162, 156, 149, 1),
+    0 3px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.key:focus-visible {
+  outline: 2px solid rgba(50, 45, 40, 0.25);
+  outline-offset: 2px;
+}
+
+/* ── Mood selector ────────────────────────────────────────────────────────── */
+
+.mood-panel {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  position: relative;
+  z-index: 1;
+}
+
+.mood-hint {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(50, 45, 40, 0.28);
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mood-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.mood-btn {
+  flex-shrink: 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(50, 45, 40, 0.42);
+  padding: 5px 11px 4px;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, color 0.1s;
+
+  /* Raised key surface — same language as the pill keys */
+  background: linear-gradient(to bottom, #e8e3dd 0%, #ddd8d2 100%);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.09),
+    0 3px 0 rgba(178, 173, 166, 1),
+    0 4px 0 rgba(158, 153, 146, 1),
+    0 5px 10px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.68);
+}
+
+.mood-btn:hover {
+  color: rgba(50, 45, 40, 0.6);
+  background: linear-gradient(to bottom, #ede8e2 0%, #e2ddd7 100%);
+}
+
+.mood-btn:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.09),
+    0 1px 0 rgba(178, 173, 166, 1),
+    0 2px 5px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 1px 4px rgba(0, 0, 0, 0.07);
+}
+
+.mood-btn.active {
+  color: rgba(50, 45, 40, 0.75);
+  transform: translateY(2px);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.09),
+    0 1px 0 rgba(178, 173, 166, 1),
+    0 2px 5px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 1px 4px rgba(0, 0, 0, 0.07);
+}
+
+.mood-btn:focus-visible {
+  outline: 2px solid rgba(50, 45, 40, 0.22);
+  outline-offset: 2px;
+}
+
+/* ── Key labels ───────────────────────────────────────────────────────────── */
+
+.labels-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.key-label {
+  flex: 0 0 62px;
+  text-align: center;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(50, 45, 40, 0.58);
+  user-select: none;
+}
+
+/* ── Mobile — rotate device to landscape within portrait viewport ─────────── */
+
+@media (max-width: 499px) {
+  html, body {
+    overflow: hidden;
+    width: 100%;
+    /* svh = small viewport height (excludes address bar) — most reliable on iOS */
+    height: 100svh;
+    min-height: unset; /* override the desktop min-height: 100vh */
+    padding: 0;
+    margin: 0;
+  }
+}
