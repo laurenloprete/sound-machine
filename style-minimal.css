@@ -684,3 +684,25 @@ body {
     margin: 0;
   }
 }
+
+/* ── Footer ───────────────────────────────────────────────────────────────── */
+
+.site-footer {
+  position: fixed;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 10px;
+  font-family: monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #999;
+  pointer-events: none;
+}
+
+.site-footer a {
+  color: inherit;
+  text-decoration: underline;
+  pointer-events: all;
+}
