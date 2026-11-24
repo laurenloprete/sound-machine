@@ -139,8 +139,56 @@
     for (let i = 0; i < 24; i++) {
       specks.push({ a: Math.random() * TAU, d: Math.sqrt(Math.random()) * 0.9, s: 0.04 + Math.random() * 0.08 });
     }
+    // Lumpy outline. A few slow waves give the overall wonky shape,
+    // per point jitter gives the rough packed snow edge.
+    const base = new Float32Array(LUMPS);
+    const waves = [2, 3, 5, 7].map(k => ({ k, ph: Math.random() * TAU, amp: (0.006 + Math.random() * 0.01) * (3 / k) }));
+    for (let i = 0; i < LUMPS; i++) {
+      const a = (i / LUMPS) * TAU;
+      let v = 0;
+      for (const w of waves) v += Math.sin(a * w.k + w.ph) * w.amp;
+      base[i] = v + (Math.random() - 0.5) * 0.03;
+    }
     return { id: nextId++, x, y, r, angle: 0, below: null, above: null, offset: 0,
-             mode: 'rest', vx: 0, vy: 0, floor: 0, wobble: 0, specks };
+             mode: 'rest', vx: 0, vy: 0, floor: 0, wobble: 0, specks,
+             base, lumps: Float32Array.from(base), clumpDist: 0 };
+  }
+
+  const LUMPS = 72;
+
+  // While rolling, snow clumps stick to the edge and slowly pack back down.
+  function addClumps(b, dist) {
+    b.clumpDist += dist;
+    while (b.clumpDist > 26) {
+      b.clumpDist -= 26;
+      const at = Math.floor(Math.random() * LUMPS);
+      const amp = 0.012 + Math.random() * 0.025;
+      const width = 1 + Math.floor(Math.random() * 2);
+      for (let j = -width; j <= width; j++) {
+        const i = (at + j + LUMPS) % LUMPS;
+        b.lumps[i] += amp * (1 - Math.abs(j) / (width + 1)) + (Math.random() - 0.5) * 0.015;
+      }
+    }
+    for (let i = 0; i < LUMPS; i++) {
+      b.lumps[i] = Math.max(-0.05, Math.min(0.07, b.lumps[i] * 0.97 + b.base[i] * 0.03));
+    }
+  }
+
+  function ballPath(c, b) {
+    const pts = [];
+    for (let i = 0; i < LUMPS; i++) {
+      const a = (i / LUMPS) * TAU + b.angle;
+      const rr = b.r * (1 + b.lumps[i]);
+      pts.push([b.x + Math.cos(a) * rr, b.y + Math.sin(a) * rr]);
+    }
+    c.beginPath();
+    const last = pts[LUMPS - 1];
+    c.moveTo((last[0] + pts[0][0]) / 2, (last[1] + pts[0][1]) / 2);
+    for (let i = 0; i < LUMPS; i++) {
+      const p = pts[i], q = pts[(i + 1) % LUMPS];
+      c.quadraticCurveTo(p[0], p[1], (p[0] + q[0]) / 2, (p[1] + q[1]) / 2);
+    }
+    c.closePath();
   }
   const foot = b => b.y + b.r * 0.92;
   const topOf = b => { while (b.above) b = b.above; return b; };
@@ -449,9 +497,9 @@
     g.addColorStop(0.82, '#e7eef6');
     g.addColorStop(1, '#d2dce8');
     c.fillStyle = g;
-    c.beginPath(); c.arc(b.x, b.y, b.r, 0, TAU); c.fill();
+    ballPath(c, b); c.fill();
     c.save();
-    c.beginPath(); c.arc(b.x, b.y, b.r, 0, TAU); c.clip();
+    ballPath(c, b); c.clip();
     c.fillStyle = 'rgba(150,172,200,0.13)';
     for (const sp of b.specks) {
       const a = sp.a + b.angle;
@@ -462,7 +510,7 @@
     c.restore();
     c.strokeStyle = 'rgba(150,170,196,0.38)';
     c.lineWidth = 1;
-    c.beginPath(); c.arc(b.x, b.y, b.r, 0, TAU); c.stroke();
+    ballPath(c, b); c.stroke();
   }
 
   function drawDecor(c, d) {
@@ -707,6 +755,7 @@
       const nr = Math.min(cap, b.r + dist * 0.06 * (1 - (b.r / cap) * 0.5));
       if (nr !== b.r) { drag.ox *= nr / b.r; drag.oy *= nr / b.r; b.r = nr; }
       b.angle += (dx + dy * 0.3) / b.r;
+      addClumps(b, dist);
       tctx.strokeStyle = '#f4f7fb';
       tctx.lineCap = 'round';
       tctx.lineWidth = (prevR + b.r) * 0.6;
